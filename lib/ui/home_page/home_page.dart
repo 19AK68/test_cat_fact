@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:test_cat_fact/constants/ui_constans.dart';
 import 'package:test_cat_fact/constants/ui_string.dart';
+import 'package:test_cat_fact/model/db/history_model.dart';
 import 'package:test_cat_fact/ui/home_page/home_page_block.dart';
 import 'package:test_cat_fact/ui/home_page/home_page_state.dart';
 import 'package:test_cat_fact/ui/widget/error_text_widget.dart';
 import 'package:test_cat_fact/ui/widget/loading_widget.dart';
+import 'package:test_cat_fact/utils/db_utils/boxes.dart';
 import 'package:test_cat_fact/utils/themes/custom_themes.dart';
 import 'package:test_cat_fact/utils/themes/my_themes.dart';
 
@@ -31,7 +33,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+
+    super.dispose();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -73,7 +83,17 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             MaterialButton(
-                onPressed: () {},
+
+                onPressed: () {
+                  final histories = HistoryModel()
+                      ..createdDate = _bloc.dateTimes
+                      ..fact = _bloc.fact;
+                  final box= Boxes.getHistories();
+                  box.add(histories);
+
+
+
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                     side: BorderSide(color: Theme.of(context).primaryColorLight)),
@@ -114,7 +134,7 @@ class _HomePageState extends State<HomePage> {
             }
             double width = MediaQuery.of(context).size.width / UiConstants.homePageWidgetWidth;
             double height = width + width / UiConstants.homePageHorizontalWidgetTitle;
-            return Container(height: height, child: LoadingWidget());
+            return SizedBox(height: height, child: LoadingWidget());
           }
         });
   }
@@ -126,8 +146,10 @@ class _HomePageState extends State<HomePage> {
     String? currendDate = _bloc.currentDate();
     if (list != null && list.isNotEmpty) {
       var randomItem = random.nextInt(list.length);
-      //  var text = list[randomItem]["fact"].toString();
-      var text = _bloc.listFact![randomItem]["fact"].toString();
+      var  text = _bloc.listFact![randomItem]["fact"].toString();
+      _bloc.fact = text;
+
+
       return ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
@@ -158,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Text(
-                        text,
+                      _bloc.fact,
                         style: TextStyle(fontSize: 16, color: UiConstants.colorsTextFact),
                       ),
                       Text(
@@ -170,7 +192,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
           ),
+
         ],
       );
     } else {

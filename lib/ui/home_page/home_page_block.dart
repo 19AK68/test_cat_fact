@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:test_cat_fact/data/entity/cat/cat_entity.dart';
 import 'package:test_cat_fact/data/entity/cat/cat_entity_impl.dart';
@@ -16,6 +17,20 @@ class HomePageBlock {
   late CatEntity _catEntity;
   List? listFact;
   String? linkImgCat;
+
+  String? _stringDate;
+
+  String get stringData => _stringDate!;
+  DateTime? _dateTimes;
+
+  DateTime get dateTimes => _dateTimes!;
+  String? _fact;
+
+  set fact(String value) {
+    _fact = value;
+  }
+
+  String get fact => _fact!;
 
   HomePageBlock() {
     _factEntity = FactEntityImpl();
@@ -50,8 +65,18 @@ class HomePageBlock {
 
   String? currentDate() {
     DateTime now = DateTime.now();
-    var dates = now.day.toString() + now.month.toString() + now.year.toString();
-    return "\n${now.day}/ ${now.month}/${now.year}\n ${now.hour}:${now.minute}:${now.second}";
+    _dateTimes = now;
+    _stringDate =
+        "\n${now.day}/ ${now.month}/${now.year}\n ${now.hour}:${now.minute}:${now.second}";
+    return _stringDate;
+  }
+
+  String? currentFact() {
+    final random = Random();
+    var randomItem = random.nextInt(listFact!.length);
+    //  var text = list[randomItem]["fact"].toString();
+    _fact = listFact![randomItem]["fact"].toString();
+    return _fact;
   }
 
   String randomImg() {
