@@ -67,7 +67,7 @@ class HomePageBlock {
     DateTime now = DateTime.now();
     _dateTimes = now;
     _stringDate =
-        "\n${now.day}/ ${now.month}/${now.year}\n ${now.hour}:${now.minute}:${now.second}";
+        "\n${now.day}/ ${now.month}/${now.year} ${now.hour}:${now.minute}:${now.second}\n";
     return _stringDate;
   }
 

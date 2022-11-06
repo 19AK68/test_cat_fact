@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:test_cat_fact/constants/navigator_helper.dart';
 import 'package:test_cat_fact/constants/ui_constans.dart';
 import 'package:test_cat_fact/constants/ui_string.dart';
 import 'package:test_cat_fact/model/db/history_model.dart';
@@ -34,21 +35,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-
     super.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
         title: Text(
           widget.title,
-          style: const TextStyle(),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.palette),
@@ -73,7 +71,14 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 20),
-        const Text("This is  fact about cat:"),
+        Text(
+          UiString.randomTextHomePage,
+          style: TextStyle(
+              color: UiConstants.colorsTextFact,
+              fontWeight: FontWeight.bold,
+              fontSize: UiConstants.randomTextHomePageFonSize),
+        ),
+        const SizedBox(height: 20),
         Expanded(child: randomFactStreamWidget()),
         const SizedBox(
           height: 20,
@@ -82,36 +87,46 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            MaterialButton(
-
-                onPressed: () {
-                  final histories = HistoryModel()
-                      ..createdDate = _bloc.dateTimes
-                      ..fact = _bloc.fact;
-                  final box= Boxes.getHistories();
-                  box.add(histories);
-
-
-
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Theme.of(context).primaryColorLight)),
-                child: Text(UiString.buttonSaveText)),
-            MaterialButton(
-                onPressed: () {
-                  _bloc.getFact();
-                  _bloc.getCat();
-                  //   _bloc.initState();
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Theme.of(context).primaryColorLight)),
-                child: Text(UiString.buttonNextText)),
+            SizedBox(
+                height: UiConstants.buttonHeight,
+                width: UiConstants.buttonWidth,
+                child: buildButtonSave()),
+            SizedBox(
+              height: UiConstants.buttonHeight,
+              width: UiConstants.buttonWidth,
+              child: MaterialButton(
+                  onPressed: () {
+                    _bloc.getFact();
+                    _bloc.getCat();
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: UiConstants.colorsTextFact)),
+                  child: Text(
+                    UiString.buttonNextText,
+                    style: TextStyle(color: UiConstants.colorsTextFact, fontWeight: FontWeight.bold),
+                  )),
+            ),
           ],
         )
       ],
     );
+  }
+
+  MaterialButton buildButtonSave() {
+    return MaterialButton(
+        onPressed: () {
+          final histories = HistoryModel()
+            ..createdDate = _bloc.dateTimes
+            ..fact = _bloc.fact;
+          final box = Boxes.getHistories();
+          box.add(histories);
+          NavigationHelper.openHistoryPage(context);
+        },
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+            side: BorderSide(color: UiConstants.colorsTextFact)),
+        child: Text(UiString.buttonSaveText));
   }
 
   Widget randomFactStreamWidget() {
@@ -120,17 +135,13 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.data is HomePageFactListState) {
             HomePageFactListState state = snapshot.data as HomePageFactListState;
-            return _randomFactListWidget(
-              state.list,
-            );
+            return _randomFactListWidget(state.list);
           } else if (snapshot.data is HomePageErrorState) {
             HomePageErrorState state = snapshot.data as HomePageErrorState;
             return ErrorTextWidget(state.error.text);
           } else {
             if (_bloc.listFact != null) {
-              return _randomFactListWidget(
-                _bloc.listFact,
-              );
+              return _randomFactListWidget(_bloc.listFact);
             }
             double width = MediaQuery.of(context).size.width / UiConstants.homePageWidgetWidth;
             double height = width + width / UiConstants.homePageHorizontalWidgetTitle;
@@ -139,31 +150,36 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _randomFactListWidget(
-    List? list,
-  ) {
+  Widget _randomFactListWidget(List? list) {
     final random = Random();
-    String? currendDate = _bloc.currentDate();
+    String? currentDate = _bloc.currentDate();
     if (list != null && list.isNotEmpty) {
       var randomItem = random.nextInt(list.length);
-      var  text = _bloc.listFact![randomItem]["fact"].toString();
+      var text = _bloc.listFact![randomItem]["fact"].toString();
       _bloc.fact = text;
-
 
       return ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         children: [
           Center(
-            child: Container(
-                height: 200,
-                width: 200,
+            child: Card(
+                shadowColor: Theme.of(context).cardColor,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
+                ),
+                // height: 200,
+                // width: 200,
                 // constraints: const BoxConstraints(maxHeight: 100),
-                child: Image.network(
-                  _bloc.randomImg(),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: 200,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
+                  child: Image.network(
+                    _bloc.randomImg(),
+                    fit: BoxFit.cover,
+                    height: UiConstants.imgCatHeight,
+                    width: UiConstants.imgCatWidth,
+                  ),
                 )),
           ),
           Padding(
@@ -179,26 +195,43 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: Column(
                     children: [
-                      Text(
-                      _bloc.fact,
-                        style: TextStyle(fontSize: 16, color: UiConstants.colorsTextFact),
+                      Row(
+                        children: [
+                          Text(
+                            currentDate!,
+                            style: TextStyle(
+                                fontSize: UiConstants.fontSizeTextFact,
+                                color: UiConstants.colorsTextFact,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       Text(
-                        currendDate!,
-                        style: TextStyle(fontSize: 14, ),
+                        _bloc.fact,
+                        style: TextStyle(
+                            fontSize: UiConstants.fontSizeTextFact,
+                            color: UiConstants.colorsTextFact,
+                            fontWeight: FontWeight.normal),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-
           ),
-
         ],
       );
     } else {
       return Container(height: 200);
     }
+  }
+
+  Widget bb(Null Function() press) {
+    return MaterialButton(
+        onPressed: press,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+            side: BorderSide(color: Theme.of(context).primaryColorLight)),
+        child: Text(UiString.buttonNextText));
   }
 }

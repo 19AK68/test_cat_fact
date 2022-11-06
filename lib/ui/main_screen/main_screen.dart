@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
             label:"",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pageview, size: 24,),
+            icon: Icon(Icons.history_edu_sharp, size: 24,),
             label:"",
           ),
         ],
