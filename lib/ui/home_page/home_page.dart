@@ -11,7 +11,7 @@ import 'package:test_cat_fact/utils/themes/custom_themes.dart';
 import 'package:test_cat_fact/utils/themes/my_themes.dart';
 
 class HomePage extends StatefulWidget {
- HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -61,24 +61,35 @@ class _HomePageState extends State<HomePage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children:  <Widget>[
+      children: <Widget>[
+        const SizedBox(height: 20),
+        const Text("This is  fact about cat:"),
+        Expanded(child: randomFactStreamWidget()),
         const SizedBox(
-          height: 100,
-        ),
-    const   Text("This is  fact about cat:"),
-         randomFactStreamWidget(),
-      const  SizedBox(
           height: 20,
         ),
-        MaterialButton(
-            onPressed: () {
-              _bloc.getFact();
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side:  BorderSide(color: Theme.of(context).primaryColorLight)),
-            child: Text(UiString.buttonNextText))
-
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            MaterialButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Theme.of(context).primaryColorLight)),
+                child: Text(UiString.buttonSaveText)),
+            MaterialButton(
+                onPressed: () {
+                  _bloc.getFact();
+                  _bloc.getCat();
+                  //   _bloc.initState();
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Theme.of(context).primaryColorLight)),
+                child: Text(UiString.buttonNextText)),
+          ],
+        )
       ],
     );
   }
@@ -108,34 +119,59 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _randomFactListWidget(List? list, ) {
-    final random =  Random();
+  Widget _randomFactListWidget(
+    List? list,
+  ) {
+    final random = Random();
     String? currendDate = _bloc.currentDate();
     if (list != null && list.isNotEmpty) {
-     var randomItem = random.nextInt(list.length);
-    //  var text = list[randomItem]["fact"].toString();
+      var randomItem = random.nextInt(list.length);
+      //  var text = list[randomItem]["fact"].toString();
       var text = _bloc.listFact![randomItem]["fact"].toString();
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          shadowColor: Theme.of(context).cardColor,
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
+      return ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: [
+          Center(
+            child: Container(
+                height: 200,
+                width: 200,
+                // constraints: const BoxConstraints(maxHeight: 100),
+                child: Image.network(
+                  _bloc.randomImg(),
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: 200,
+                )),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Column(
-                children: [
-                  Text(text,style:   TextStyle(fontSize:16, color: Colors.purple),),
-                  Text(currendDate!,style:   TextStyle(fontSize:16, color: Colors.purple),),
-
-                ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              shadowColor: Theme.of(context).cardColor,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        text,
+                        style: TextStyle(fontSize: 16, color: UiConstants.colorsTextFact),
+                      ),
+                      Text(
+                        currendDate!,
+                        style: TextStyle(fontSize: 14, ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ) ,
-        ),
+          ),
+        ],
       );
     } else {
       return Container(height: 200);
