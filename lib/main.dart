@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: UiString.appBarTitle,
       theme: CustomTheme.of(context),
-      home: const MainScreen(), //HomePage(title: UiString.titelHopmePage),
+      home: const MainScreen(),
     );
   }
 }
