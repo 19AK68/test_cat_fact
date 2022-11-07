@@ -14,11 +14,10 @@ class FactNetworkImpl implements FactNetwork {
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      //    List<FactModel>  list = [] ;
-      final ggg = (json.decode(response.body)["data"]);
-      // var fff =  List<FactModel>.from(ggg?.map((f)=>FactModel.fromJson(f)));
-      //    List<FactModel>? list = ggg.map<FactModel>((json)=> FactModel.fromJson(json)).toList();
-      return ggg;
+
+      final factsList = (json.decode(response.body)["data"]);
+
+      return factsList;
     } else {
       return [];
     }

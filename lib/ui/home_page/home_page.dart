@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        const SizedBox(height: 20),
+        SizedBox(height: UiConstants.emptySizeBoxHeight),
         Text(
           UiString.randomTextHomePage,
           style: TextStyle(
@@ -78,11 +78,9 @@ class _HomePageState extends State<HomePage> {
               fontWeight: FontWeight.bold,
               fontSize: UiConstants.randomTextHomePageFonSize),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: UiConstants.emptySizeBoxHeight),
         Expanded(child: randomFactStreamWidget()),
-        const SizedBox(
-          height: 20,
-        ),
+        SizedBox(height: UiConstants.emptySizeBoxHeight),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -104,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                       side: BorderSide(color: UiConstants.colorsTextFact)),
                   child: Text(
                     UiString.buttonNextText,
-                    style: TextStyle(color: UiConstants.colorsTextFact, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: UiConstants.colorsTextFact, fontWeight: FontWeight.bold),
                   )),
             ),
           ],
@@ -169,9 +168,6 @@ class _HomePageState extends State<HomePage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
                 ),
-                // height: 200,
-                // width: 200,
-                // constraints: const BoxConstraints(maxHeight: 100),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(UiConstants.borderRadiusCircular.toDouble()),
                   child: Image.network(

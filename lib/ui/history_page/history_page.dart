@@ -74,7 +74,9 @@ class _HistoryPageState extends State<HistoryPage> {
             catFact,
             maxLines: 4,
             style: TextStyle(
-                color: UiConstants.colorsTextFact, fontWeight: FontWeight.bold, fontSize: 12),
+                color: UiConstants.colorsTextFact,
+                fontWeight: FontWeight.bold,
+                fontSize: UiConstants.fontSizeExpansionTitle),
           ),
           children: [
             buildButtons(context, history),

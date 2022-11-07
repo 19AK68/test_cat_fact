@@ -1,18 +1,15 @@
 class FactModel {
-
   List<Data>? data;
 
   FactModel({
-
     this.data,
   });
 
   FactModel.fromJson(Map<String, dynamic> json) {
-
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add( Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }

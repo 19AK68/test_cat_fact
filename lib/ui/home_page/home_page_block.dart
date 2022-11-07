@@ -43,10 +43,8 @@ class HomePageBlock {
   }
 
   Future<void> getFact() async {
-    var gf;
     _factEntity.getListFact().then((list) {
       listFact = list;
-      //    gf = listFact![0]!["fact"]!.toString();
 
       if (!_factStreamController.isClosed) {
         _factStreamController.sink.add(HomePageStates.setFactList(
@@ -74,7 +72,7 @@ class HomePageBlock {
   String? currentFact() {
     final random = Random();
     var randomItem = random.nextInt(listFact!.length);
-    //  var text = list[randomItem]["fact"].toString();
+
     _fact = listFact![randomItem]["fact"].toString();
     return _fact;
   }
